@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary
 {
-    internal class DbService
+    public class DbService
     {
         /// <summary>
         /// Создание таблиц, если их нет
@@ -52,7 +52,7 @@ namespace ClassLibrary
             {
                 return await QueryAsync(conn, sql);
             }
-            catch (PostgresException ex) when (ex.SqlState == "42P01")
+            catch (PostgresException ex)
             {
                 return new DataTable();
             }

@@ -15,6 +15,6 @@ namespace ClassLibrary
         /// <summary>
         /// Строка подключения к филиалу 2
         /// </summary>
-        public const string ClientConn = "Host=localhost;Port=5432;Database=maindb;Username=postgres";
+        public const string ClientConn = "Host=localhost;Port=5432;Database=clientdb;Username=postgres";
     }
 }

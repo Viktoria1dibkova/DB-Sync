@@ -14,8 +14,8 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBlock Text="Работает на:"  FontSize="15" FontWeight="Bold" VerticalAlignment="Center"/>
-            <RadioButton x:Name="RadioMain" Content="Филиал 1 (maindb)" IsChecked="True"  Margin="12,0,0,0" VerticalAlignment="Center" FontSize="15"/>
-            <RadioButton x:Name="RadioClient" Content="Филиал 2 (clientb)" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="15"/>
+            <RadioButton x:Name="RadioMain" Content="Филиал 1 (maindb)" IsChecked="True"  Margin="12,0,0,0" VerticalAlignment="Center" FontSize="15" Click="Branch_Click"/>
+            <RadioButton x:Name="RadioClient" Content="Филиал 2 (clientb)" Margin="12,0,0,0" VerticalAlignment="Center" FontSize="15" Click="Branch_Click"/>
         </StackPanel>
         <TabControl Grid.Row="1" FontSize="15">
             <TabItem Header="Товары">
@@ -32,7 +32,7 @@
                         <TextBox x:Name="TxtName" Width="180" Margin="10,0,10,0"/>
                         <TextBlock Text="Цена:" VerticalAlignment="Center"/>
                         <TextBox x:Name="TxtPrice" Width="100" Margin="10,0,10,0"/>
-                        <Button Content="Добавить товар" Padding="10,5" FontWeight="Bold"/>
+                        <Button Content="Добавить товар" Padding="10,5" FontWeight="Bold" Click="AddProduct_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -53,13 +53,14 @@
                         </ComboBox>
                         <TextBlock Text="Кол-во:" VerticalAlignment="Center"/>
                         <TextBox x:Name="TxtQty" Width="60" Margin="10,0,10,0"/>
-                        <Button Content="Провести операцию" Padding="10,5" FontWeight="Bold"/>
+                        <Button Content="Провести операцию" Padding="10,5" FontWeight="Bold" Click="AddProduct_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10">
             <Button Content="Синхронизировать филиалы" Width="230" Height="34" FontWeight="Bold" FontSize="15"/>
+            <TextBlock x:Name="StatusText" Text="Готово к работе" VerticalAlignment="Center" Margin="15,0,0,0"/>
         </StackPanel>
     </Grid>
 </Window>

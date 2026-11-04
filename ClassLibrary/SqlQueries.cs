@@ -30,11 +30,11 @@ namespace ClassLibrary
         /// <summary>
         /// Чтение таблицы products
         /// </summary>
-        public const string Products = @"SELECT article AS ""Артикул"", name AS ""Название"", price AS ""Цена"", created_at AS ""Создан"" FROM products ORDER BY created_at";
+        public const string Products = @"SELECT id, article AS ""Артикул"", name AS ""Название"", price AS ""Цена"", created_at AS ""Создан"" FROM products ORDER BY created_at";
         /// <summary>
         /// Чтение таблицы moves
         /// </summary>
-        public const string Moves = @"SELECT m.created_at AS ""Дата"", p.article AS ""Артикул"", p.name AS ""Товар"",
+        public const string Moves = @"SELECT m.id, m.created_at AS ""Дата"", p.article AS ""Артикул"", p.name AS ""Товар"",
                                     CASE m.move_type WHEN 'in' THEN 'Приход' ELSE 'Расход' END AS ""Операция"",
                                     m.quantity AS ""Кол-во"", m.branch AS ""Филиал"" FROM stock_moves m
                                     JOIN products p ON p.id = m.product_id ORDER BY m.created_at DESC";
@@ -50,5 +50,17 @@ namespace ClassLibrary
         /// Вставка в moves
         /// </summary>
         public const string InsertMove = "INSERT INTO stock_moves (product_id, move_type, quantity, branch) VALUES (@pid, @t, @q, @b)";
+        /// <summary>
+        /// Удаление передвижения
+        /// </summary>
+        public const string DeleteMove = "DELETE FROM stock_moves WHERE id = @id";
+        /// <summary>
+        /// Удаление передвижений связанных с продуктом
+        /// </summary>
+        public const string DeleteMovesByProduct = "DELETE FROM stock_moves WHERE product_id = @pid";
+        /// <summary>
+        /// Удаление продукта
+        /// </summary>
+        public const string DeleteProduct = "DELETE FROM products WHERE id = @id";
     }
 }

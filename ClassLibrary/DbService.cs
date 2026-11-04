@@ -73,5 +73,43 @@ namespace ClassLibrary
             foreach (var (name, value) in parameters) cmd.Parameters.AddWithValue(name, value);
             await cmd.ExecuteNonQueryAsync();
         }
+
+        /// <summary>
+        /// Удаление движения
+        /// </summary>
+        /// <param name="conn">строка соединения</param>
+        /// <param name="moveId">ID записи передвижения</param>
+        /// <returns></returns>
+        public static async Task DeleteMoveAsync(string conn, Guid moveId)
+        {
+            await ExecuteAsync(conn, SqlQueries.DeleteMove, ("id", moveId));
+        }
+
+        /// <summary>
+        /// Удаление товара с его передвижениями (если есть)
+        /// </summary>
+        /// <param name="conn">строка соединения</param>
+        /// <param name="productId">ID продукта</param>
+        /// <returns></returns>
+        public static async Task DeleteProductWithMovesAsync(string conn, Guid productId)
+        {
+            await ExecuteAsync(conn, SqlQueries.DeleteMovesByProduct, ("pid", productId));
+            await ExecuteAsync(conn, SqlQueries.DeleteProduct, ("id", productId));
+        }
+
+        /// <summary>
+        /// Подсчет количества зависимых передвижений продукта
+        /// </summary>
+        /// <param name="conn">строка соединения</param>
+        /// <param name="productId">ID продукта</param>
+        /// <returns></returns>
+        public static async Task<long> CountMovesByProductAsync(string conn, Guid productId)
+        {
+            using var c = new NpgsqlConnection(conn);
+            await c.OpenAsync();
+            using var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM stock_moves WHERE product_id = @pid", c);
+            cmd.Parameters.AddWithValue("pid", productId);
+            return (long)(await cmd.ExecuteScalarAsync())!;
+        }
     }
 }

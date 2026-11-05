@@ -65,7 +65,7 @@
             </TabItem>
         </TabControl>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10">
-            <Button Content="Синхронизировать филиалы" Width="230" Height="34" FontWeight="Bold" FontSize="15"/>
+            <Button Content="Синхронизировать филиалы" Width="230" Height="34" FontWeight="Bold" FontSize="15" Click="Sync_Click"/>
             <TextBlock x:Name="StatusText" Text="Готово к работе" VerticalAlignment="Center" Margin="15,0,0,0"/>
         </StackPanel>
     </Grid>

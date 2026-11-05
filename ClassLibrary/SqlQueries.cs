@@ -17,7 +17,8 @@ namespace ClassLibrary
                                      article VARCHAR(50) NOT NULL UNIQUE,
                                      name VARCHAR(255) NOT NULL,
                                      price NUMERIC(10,2) NOT NULL DEFAULT 0,
-                                     created_at TIMESTAMP NOT NULL DEFAULT NOW());
+                                     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                                     updated_at  TIMESTAMP NOT NULL DEFAULT NOW());
 
                                      CREATE TABLE IF NOT EXISTS stock_moves(
                                      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -25,8 +26,17 @@ namespace ClassLibrary
                                      move_type VARCHAR(10) NOT NULL,
                                      quantity INTEGER NOT NULL CHECK(quantity > 0),
                                      branch VARCHAR(50) NOT NULL,
-                                     created_at TIMESTAMP NOT NULL DEFAULT NOW()
-                                     );";
+                                     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                                     updated_at  TIMESTAMP NOT NULL DEFAULT NOW());
+
+                                     CREATE TABLE IF NOT EXISTS sync_state (
+                                     id INTEGER PRIMARY KEY,
+                                     last_sync TIMESTAMP NOT NULL);
+    
+                                     INSERT INTO sync_state (id, last_sync) VALUES (1, '2000-01-01')
+                                     ON CONFLICT (id) DO UPDATE SET last_sync = EXCLUDED.last_sync;";
+
+
         /// <summary>
         /// Чтение таблицы products
         /// </summary>
@@ -62,5 +72,36 @@ namespace ClassLibrary
         /// Удаление продукта
         /// </summary>
         public const string DeleteProduct = "DELETE FROM products WHERE id = @id";
+        /// <summary>
+        /// Получение времени последней синхронизации
+        /// </summary>
+        public const string GetSync= "SELECT last_sync FROM sync_state WHERE id = 1";
+        /// <summary>
+        /// Обновление времени последней синхронизации
+        /// </summary>
+        public const string SetSync= "UPDATE sync_state SET last_sync = @ts WHERE id = 1";
+        /// <summary>
+        /// Получение новых данных в products
+        /// </summary>
+        public const string LoadProductsSince = @"SELECT id, article, name, price, created_at, updated_at FROM products WHERE updated_at > @since";
+        /// <summary>
+        /// Получение новых данных в moves
+        /// </summary>
+        public const string LoadMovesSince = @"SELECT id, product_id, move_type, quantity, branch, created_at, updated_at FROM stock_moves WHERE updated_at > @since";
+        /// <summary>
+        /// Обновление данных (синхронизация) в products
+        /// </summary>
+        public const string UpsertProduct = @"INSERT INTO products (id, article, name, price, created_at, updated_at)
+                                            VALUES (@id, @a, @n, @p, @c, @u) ON CONFLICT (id) DO UPDATE
+                                            SET article = EXCLUDED.article, name = EXCLUDED.name,
+                                            price = EXCLUDED.price, updated_at = EXCLUDED.updated_at
+                                            WHERE products.updated_at < EXCLUDED.updated_at";
+        /// <summary>
+        /// /// Обновление данных (синхронизация) в moves
+        /// </summary>
+        public const string UpsertMove = @"INSERT INTO stock_moves (id, product_id, move_type, quantity, branch, created_at, updated_at)
+                                         VALUES (@id, @pid, @t, @q, @b, @c, @u) ON CONFLICT (id) DO UPDATE
+                                         SET quantity = EXCLUDED.quantity, branch = EXCLUDED.branch,
+                                         updated_at = EXCLUDED.updated_at WHERE stock_moves.updated_at < EXCLUDED.updated_at";
     }
 }

@@ -213,5 +213,20 @@ namespace КР
             }
         }
 
+        private async void Sync_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                StatusText.Text = "Синхронизация...";
+                var report = await SyncService.SynchronizeAsync(DbConfig.MainConn, DbConfig.ClientConn);
+                StatusText.Text = "Готово: " + report;
+                await ReloadAllAsync();
+            }
+            catch (Exception ex)
+            {
+                StatusText.Text = "Ошибка синхронизации: " + ex.Message;
+            }
+        }
+
     }
 }
